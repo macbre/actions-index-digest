@@ -26,4 +26,4 @@ jobs:
           index-digest-version: ${{ matrix.index-digest-version }}
 
       - name: Check the version
-        run: index_digest --help
+        run: index_digest --version
