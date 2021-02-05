@@ -14,4 +14,6 @@ runs:
   using: "composite"
   steps:
     - shell: bash 
-      run: pip install indexdigest==${{ inputs.index-digest-version }}
+      run: |
+        pip install wheel
+        pip install indexdigest==${{ inputs.index-digest-version }}
