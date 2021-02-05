@@ -13,7 +13,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # https://hub.docker.com/r/macbre/index-digest
     - shell: bash 
       run: |
-        pip install wheel
-        pip install indexdigest==${{ inputs.index-digest-version }}
+        echo "Using index-version v${{ inputs.index-digest-version }} ..."
+        docker pull macbre/index-digest:${{ inputs.index-digest-version }}
+
+    - shell: bash
+      # run: docker run --network=host -t macbre/index-digest:latest mysql://index_digest:qwerty@debian/index_digest  | head -n 20
+      run: docker run --network=host -t macbre/index-digest --version
