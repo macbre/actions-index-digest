@@ -1,0 +1,17 @@
+name: "index-digest Action"
+author: "@macbre"
+description: "An action to run https://github.com/macbre/index-digest"
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#branding
+branding:
+  icon: "database"
+  color: "green"
+inputs:
+  index-digest-version:
+    description: "The version of index-digest to install"
+    required: true
+    default: "1.4.0"
+runs:
+  using: "composite"
+  steps:
+    - run: pip install index_digest==${{ inputs.index-digest-version }}
+      shell: bash
