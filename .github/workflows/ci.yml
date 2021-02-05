@@ -7,20 +7,23 @@ on:
 
 jobs:
   ci:
+    runs-on: "ubuntu-20.04"  # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     strategy:
       fail-fast: false
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-        index-digest--version: [1.4.0]
+        index-digest-version: [1.4.0]
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run image
+
+      - name: Run an action
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
+
       - name: Check the version
         run: index_digest --help
