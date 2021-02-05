@@ -22,4 +22,4 @@ jobs:
           index-digest-version: ${{ matrix.index-digest-version }}
 
       - name: Check the version
-        run: docker run -t macbre/index-digest --version
+        run: docker run -t macbre/index-digest:${{ matrix.index-digest-version }} --version
