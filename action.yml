@@ -1,4 +1,4 @@
-name: "index-digest Action"
+name: "index-digest action - database performance regression testing"
 author: "@macbre"
 description: "An action to run https://github.com/macbre/index-digest"
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#branding
