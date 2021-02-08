@@ -30,6 +30,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Import test schema into the database
+        run: |
+          echo "[client]\nuser=digest\npassword=s3cr3t\n" > ~/.my.cnf
+
+          mysql --host=database --port=3310 --user=digest < ./sql/0001_redundant_indices.sql
+          mysql --host=database --port=3310 --user=digest --execute="SHOW TABLES"
 
       # docker run --network=host -t macbre/index-digest:latest mysql://index_digest:qwerty@debian/index_digest  | head -n 20
       - name: Run an action
