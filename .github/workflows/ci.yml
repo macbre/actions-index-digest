@@ -15,13 +15,28 @@ jobs:
         - "1.4.0"
         - "latest"
 
+    services:
+      # https://hub.docker.com/_/mysql
+      database:
+        image: "mysql:8.0.22"
+        env:
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_DATABASE: index_digest
+            MYSQL_USER: digest
+            MYSQL_PASSWORD: s3cr3t
+        ports:
+            - "3310:3306"  # will be listening on 3310 host port
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - uses: actions/checkout@v2
 
+      # docker run --network=host -t macbre/index-digest:latest mysql://index_digest:qwerty@debian/index_digest  | head -n 20
       - name: Run an action
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
+          index-digest-dsn: "mysql://digest:s3cr3t@database:3310/index_digest"
 
       - name: Check the version
         run: docker run -t macbre/index-digest:${{ matrix.index-digest-version }} --version
