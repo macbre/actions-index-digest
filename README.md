@@ -83,7 +83,7 @@ Then, having a slow query log, all you need to do is parse it with [`pt-query-di
 pt-query-digest /tmp/log/slow_query.log --output json | jq .classes[].example.query | sed 's/\\n/ /g'| jq -r . > /tmp/log.sql
 ```
 
-And the run the action:
+And then run the action:
 
 ```yaml
     - name: Install and run index-digest
