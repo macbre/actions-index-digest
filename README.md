@@ -23,4 +23,29 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 
 > Here we assume that MySQL uses `test_user` with `test_password` credential for `test_db` database. And that the MySQL server runs locally listening on a default port (3306).
 
-`index-digest` inmage will be fetched and run with the provided options. The YAML report file will be stored in the location specified by `index-digest-report-file`. You can use it for additional assertions and to raise an error in your CI pipeline if there's something wrong.
+`index-digest` image will be fetched and run with the provided options. The YAML report file will be stored in the location specified by `index-digest-report-file`. You can use it for additional assertions and to raise an error in your CI pipeline if there's something wrong.
+
+## An example result file
+
+```yaml
+---
+meta:
+  version: index-digest v1.4.0
+  database_name: index_digest
+  database_host: eeae7273a00a
+  database_version: MySQL v8.0.22
+reports:
+- type: redundant_indices
+  table: 0001_redundant_indices
+  message: '"idx_foo" index can be removed as redundant (covered by "idx_foo_2")'
+  context:
+    redundant: UNIQUE KEY idx_foo (foo)
+    covered_by: UNIQUE KEY idx_foo_2 (foo)
+    schema: "CREATE TABLE `0001_redundant_indices` (\n  `item_id` int NOT NULL AUTO_INCREMENT,\n\
+      \  `foo` varbinary(16) NOT NULL DEFAULT '',\n  PRIMARY KEY (`item_id`),\n  UNIQUE\
+      \ KEY `idx_foo` (`foo`),\n  UNIQUE KEY `idx_foo_2` (`foo`)\n) ENGINE=InnoDB\
+      \ DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"
+    table_data_size_mb: 0.015625
+    table_index_size_mb: 0.03125
+...
+```
