@@ -15,6 +15,11 @@ inputs:
     description: "DSN pointing at the database to check"
     require: true
 
+  index-digest-sql-log:
+    description: "File with SQL queries to check against the database"
+    require: false
+    default: "/tmp/index_digest_empty_log.sql"
+
   index-digest-checks:
     description: "Which index-digest checks to perform"
     require: true
@@ -31,12 +36,20 @@ runs:
     # https://hub.docker.com/r/macbre/index-digest
     - shell: bash 
       run: |
-        echo "Using index-version v${{ inputs.index-digest-version }} ..."
+        echo "Using index-version ${{ inputs.index-digest-version }} ..."
         docker pull macbre/index-digest:${{ inputs.index-digest-version }}
+
+        echo "Using SQL log file: ${{ inputs.index-digest-sql-log }} ..."
+
+        # create an empty SQL log file (will be used when "index-digest-sql-log" is not provided)
+        touch /tmp/index_digest_empty_log.sql
+
 
     - shell: bash
       run: |
-        docker run --network=host -t macbre/index-digest:${{ inputs.index-digest-version }} \
+        docker run --network=host --volume="${{ inputs.index-digest-sql-log }}:/tmp/log.sql:ro" \
+          -t macbre/index-digest:${{ inputs.index-digest-version }} \
           --checks=${{ inputs.index-digest-checks }} \
+          --sql-log=/tmp/log.sql \
           --format=yaml \
           ${{ inputs.index-digest-dsn }} | tee ${{ inputs.index-digest-report-file }}

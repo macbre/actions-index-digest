@@ -80,5 +80,19 @@ You will then have **all queries** (not only slow ones - see `--long-query-time`
 Then, having a slow query log, all you need to do is parse it with [`pt-query-digest`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-query-digest.html) and get the list of unique SQL queries:
 
 ```
-pt-query-digest /tmp/log/slow_query.log --output json | jq .classes[].example.query | sed 's/\\n/ /g'| jq -r . > log.sql
+pt-query-digest /tmp/log/slow_query.log --output json | jq .classes[].example.query | sed 's/\\n/ /g'| jq -r . > /tmp/log.sql
 ```
+
+And then run the action:
+
+```yaml
+    - name: Install and run index-digest
+      uses: macbre/actions-index-digest@0.3.0
+      with:
+        index-digest-version: "1.4.0"
+        index-digest-dsn: "mysql://test_user:test_password@127.0.0.1:3306/test_db"
+        index-digest-sql-log: "/tmp/log.sql"  # use an absolute path here!
+        index-digest-report-file: "./report.yml"
+```
+
+> Please note that `index-digest-sql-log` **needs to be provided with an absolute path**.
