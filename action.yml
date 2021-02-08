@@ -20,6 +20,11 @@ inputs:
     require: true
     default: "redundant_indices,missing_primary_index,not_used_indices,queries_not_using_index,queries_using_filesort,queries_using_temporary,queries_using_full_table_scan"
 
+  index-digest-report-file:
+    description: "Where to save YAML report file"
+    required: true
+    default: "/tmp/index-digest.yml"
+
 runs:
   using: "composite"
   steps:
@@ -33,4 +38,5 @@ runs:
       run: |
         docker run --network=host -t macbre/index-digest:${{ inputs.index-digest-version }} \
           --checks=${{ inputs.index-digest-checks }} \
-          ${{ inputs.index-digest-dsn }}
+          --format=yaml \
+          ${{ inputs.index-digest-dsn }} | tee ${{ inputs.index-digest-report-file }}
