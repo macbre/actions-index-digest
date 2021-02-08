@@ -10,6 +10,21 @@ inputs:
     description: "The version of index-digest to install"
     required: true
     default: "1.4.0"
+    
+  index-digest-dsn:
+    description: "DSN pointing at the database to check"
+    require: true
+
+  index-digest-checks:
+    description: "Which index-digest checks to perform"
+    require: true
+    default: "redundant_indices,missing_primary_index,not_used_indices,queries_not_using_index,queries_using_filesort,queries_using_temporary,queries_using_full_table_scan"
+
+  index-digest-report-file:
+    description: "Where to save YAML report file"
+    required: true
+    default: "/tmp/index-digest.yml"
+
 runs:
   using: "composite"
   steps:
@@ -19,6 +34,9 @@ runs:
         echo "Using index-version v${{ inputs.index-digest-version }} ..."
         docker pull macbre/index-digest:${{ inputs.index-digest-version }}
 
-#     - shell: bash
-#       # run: docker run --network=host -t macbre/index-digest:latest mysql://index_digest:qwerty@debian/index_digest  | head -n 20
-#       run: docker run --network=host -t macbre/index-digest:${{ inputs.index-digest-version }} --version
+    - shell: bash
+      run: |
+        docker run --network=host -t macbre/index-digest:${{ inputs.index-digest-version }} \
+          --checks=${{ inputs.index-digest-checks }} \
+          --format=yaml \
+          ${{ inputs.index-digest-dsn }} | tee ${{ inputs.index-digest-report-file }}
