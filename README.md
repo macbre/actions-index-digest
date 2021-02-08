@@ -1,4 +1,4 @@
-# index-digest action
+# index-digest action for database performance regression testing
 
 ![actions_output](https://user-images.githubusercontent.com/1929317/107210174-12a2ba80-6a04-11eb-9958-f127521a03d8.png)
 
