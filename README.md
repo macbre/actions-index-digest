@@ -76,3 +76,9 @@ In this example we assume that you use Docker Composer to set up your CI environ
 ```
 
 You will then have **all queries** (not only slow ones - see `--long-query-time` option value) logged in `/tmp/log/slow_query.log` file that will be exposed in you host filesystem on GitHub Actions.
+
+Then, having a slow query log, all you need to do is parse it with [`pt-query-digest`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-query-digest.html) and get the list of unique SQL queries:
+
+```
+pt-query-digest /tmp/log/slow_query.log --output json | jq .classes[].example.query | sed 's/\\n/ /g'| jq -r . > log.sql
+```
