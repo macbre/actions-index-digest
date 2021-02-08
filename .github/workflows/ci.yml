@@ -37,12 +37,19 @@ jobs:
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0001_redundant_indices.sql
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest  --execute="SHOW TABLES"
 
-      # docker run --network=host -t macbre/index-digest:latest mysql://index_digest:qwerty@debian/index_digest  | head -n 20
       - name: Run an action
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
           index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-report-file: "./report.yml"
+
+      - name: Run an action (with --sql-log)
+        uses: ./
+        with:
+          index-digest-version: ${{ matrix.index-digest-version }}
+          index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-sql-log: "./sql.log"
           index-digest-report-file: "./report.yml"
 
       - name: Check the version and the output file
