@@ -32,6 +32,7 @@ runs:
     - shell: bash 
       run: |
         echo "Using index-version v${{ inputs.index-digest-version }} ..."
+        env | sort
         docker pull macbre/index-digest:${{ inputs.index-digest-version }}
 
     - shell: bash
