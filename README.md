@@ -23,7 +23,7 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 
 > Here we assume that MySQL uses `test_user` with `test_password` credential for `test_db` database. And that the MySQL server runs locally listening on a default port (3306).
 
-`index-digest` inmage will be fetched and run with the provided options. The YAML report file will be stored in the location specified by `index-digest-report-file`. You can use it for additional assertions and to raise an error in your CI pipeline if there's something wrong.
+`index-digest` image will be fetched and run with the provided options. The YAML report file will be stored in the location specified by `index-digest-report-file`. You can use it for additional assertions and to raise an error in your CI pipeline if there's something wrong.
 
 ## An example result file
 
