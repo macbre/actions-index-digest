@@ -33,7 +33,7 @@ jobs:
         run: |
           echo -e "[client]\nuser=digest\npassword=s3cr3t\n" > ~/.my.cnf
 
-          mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0000_setuo.sql
+          mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0000_setup.sql
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0001_redundant_indices.sql
 
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest  --execute="SHOW TABLES"
