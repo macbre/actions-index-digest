@@ -31,11 +31,10 @@ jobs:
       
       - name: Import test schema into the database
         run: |
+          mysql --host=127.0.0.1 --port=3310 --user=root --database=index_digest < ./sql/0000_setup.sql
+
           echo -e "[client]\nuser=digest\npassword=s3cr3t\n" > ~/.my.cnf
-
-          mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0000_setup.sql
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0001_redundant_indices.sql
-
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest  --execute="SHOW TABLES"
 
       # docker run --network=host -t macbre/index-digest:latest mysql://index_digest:qwerty@debian/index_digest  | head -n 20
