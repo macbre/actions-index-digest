@@ -15,6 +15,10 @@ inputs:
     description: "DSN pointing at the database to check"
     require: true
 
+  index-digest-sql-log:
+    description: "File with SQL queries to check against the database"
+    require: false
+
   index-digest-checks:
     description: "Which index-digest checks to perform"
     require: true
@@ -38,5 +42,6 @@ runs:
       run: |
         docker run --network=host -t macbre/index-digest:${{ inputs.index-digest-version }} \
           --checks=${{ inputs.index-digest-checks }} \
+          --sql-log=${{ inputs.index-digest-sql-log }} \
           --format=yaml \
           ${{ inputs.index-digest-dsn }} | tee ${{ inputs.index-digest-report-file }}
