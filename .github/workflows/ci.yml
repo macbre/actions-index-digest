@@ -35,6 +35,7 @@ jobs:
 
           echo -e "[client]\nuser=digest\npassword=s3cr3t\n" > ~/.my.cnf
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0001_redundant_indices.sql
+          mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0002_queries_not_using_indices.sql
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest  --execute="SHOW TABLES"
 
       - name: Run an action
@@ -49,7 +50,7 @@ jobs:
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
           index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
-          index-digest-sql-log: "./sql.log"
+          index-digest-sql-log: "./sql/log.sql"
           index-digest-report-file: "./report.yml"
 
       - name: Check the version and the output file
