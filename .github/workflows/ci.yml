@@ -43,6 +43,10 @@ jobs:
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
           index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-report-file: "./report.yml"
 
-      - name: Check the version
-        run: docker run -t macbre/index-digest:${{ matrix.index-digest-version }} --version
+      - name: Check the version and the output file
+        run: |
+          docker run -t macbre/index-digest:${{ matrix.index-digest-version }} --version
+          cat ./report.yml
+
