@@ -29,8 +29,8 @@ runs:
         echo "Using index-version v${{ inputs.index-digest-version }} ..."
         docker pull macbre/index-digest:${{ inputs.index-digest-version }}
 
-     - shell: bash
-       run: |
+    - shell: bash
+      run: |
         docker run --network=host -t macbre/index-digest:${{ inputs.index-digest-version }} \
           --checks=${{ inputs.index-digest-checks }} \
           ${{ inputs.index-digest-dsn }}
