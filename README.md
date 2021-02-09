@@ -14,7 +14,8 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 
 ```yaml
     - name: Install and run index-digest
-      uses: macbre/actions-index-digest@0.4.0
+      id: run-index-digest
+      uses: macbre/actions-index-digest@0.5.0
       with:
         index-digest-version: "1.4.0"
         index-digest-dsn: "mysql://test_user:test_password@127.0.0.1:3306/test_db"
@@ -24,6 +25,16 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 > Here we assume that MySQL uses `test_user` with `test_password` credential for `test_db` database. And that the MySQL server runs locally listening on a default port (3306).
 
 `index-digest` image will be fetched and run with the provided options. The YAML report file will be stored in the location specified by `index-digest-report-file`. You can use it for additional assertions and to raise an error in your CI pipeline if there's something wrong.
+
+Later on you in your GitHub Actions workflow can get and assert on number of issues reported by `index-digest`:
+
+```yaml
+    - name: Verify index-digest results
+      run: |
+        echo "index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
+```
+
+> Please note **`run-index-digest`** step name here. It needs to match the `id` of the previous step.
 
 ## An example result file
 
@@ -87,7 +98,7 @@ And then run the action:
 
 ```yaml
     - name: Install and run index-digest
-      uses: macbre/actions-index-digest@0.4.0
+      uses: macbre/actions-index-digest@0.5.0
       with:
         index-digest-version: "1.4.0"
         index-digest-dsn: "mysql://test_user:test_password@127.0.0.1:3306/test_db"
