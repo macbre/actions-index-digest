@@ -32,11 +32,19 @@ Later on you in your GitHub Actions workflow can get and assert on number of iss
 
 ```yaml
     - name: Verify index-digest results
+      if: steps.run-index-digest.outputs.number-of-issues >= 0
       run: |
-        echo "index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
+        echo "::warning::index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
+        echo "::group::index-digest report"
+        cat ./report.yml
+        echo "::endgroup::"
 ```
 
 > Please note **`run-index-digest`** step name here. It needs to match the `id` of the previous step.
+
+And you'll get something similar to:
+
+![Assertion](https://user-images.githubusercontent.com/1929317/107404753-e2901000-6b06-11eb-83e0-378044eb7c64.png)
 
 ## An example result file
 
