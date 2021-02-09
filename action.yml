@@ -70,4 +70,4 @@ runs:
         echo "Number of reported issues: ${number_of_issues}"
 
         echo "::set-output name=number-of-issues::${number_of_issues}"
-        echo "::set-output name=json-report::$(cat ${{ inputs.index-digest-report-file }} | yq e '.' - --tojson --indent 0)}"
+        echo "::set-output name=json-report::$(cat ${{ inputs.index-digest-report-file }} | yq . -c)"
