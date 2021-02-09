@@ -64,6 +64,3 @@ jobs:
 
           echo "Reports from an action run: ${{ steps.action-run.outputs.number-of-issues }}"
           echo "Reports from an action run (with --sql-log): ${{ steps.action-run-with-sql-log.outputs.number-of-issues }}"
-
-          echo "JSON report (with --sql-log):"
-          echo "${{ steps.action-run-with-sql-log.outputs.json-report }}" | jq .
