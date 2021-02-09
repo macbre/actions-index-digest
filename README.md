@@ -57,7 +57,7 @@ The problem of collecting SQL query logs from your application can be approached
 1. You can tell your application / framework to collect the logs for you.
 2. Your legacy software or your framework does not allow you to get the log? Then you can instruct your MySQL instance to collect SQL queries log for you.
 
-In this example we assume that you use Docker Composer to set up your CI environment on GitHub Actions. And that you have `mysql-ci` service defined there. Simply set up [the slow query log]( https://dev.mysql.com/doc/refman/8.0/en/slow-query-log.html) for it:
+In this example we assume that you use Docker Compose to set up your CI environment on GitHub Actions. And that you have `mysql-ci` service defined there. Simply set up [the slow query log]( https://dev.mysql.com/doc/refman/8.0/en/slow-query-log.html) for it:
 
 ```yaml
   mysql-ci:
