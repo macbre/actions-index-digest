@@ -41,6 +41,7 @@ jobs:
           cp ./sql/log.sql /tmp/log.sql
 
       - name: Run an action
+        id: action-run
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
@@ -48,6 +49,7 @@ jobs:
           index-digest-report-file: "./report.yml"
 
       - name: Run an action (with --sql-log)
+        id: action-run-with-sql-log
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
@@ -60,3 +62,5 @@ jobs:
           docker run -t macbre/index-digest:${{ matrix.index-digest-version }} --version
           cat ./report.yml
 
+          echo "Reports from an action run: ${{ steps.action-run.outputs.number-of-issues }}"
+          echo "Reports from an action run (with --sql-log): ${{ steps.action-run-with-sql-log.outputs.number-of-issues }}"
