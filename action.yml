@@ -30,9 +30,18 @@ inputs:
     required: true
     default: "/tmp/index-digest.yml"
 
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
+outputs:
+  sum: # id of the output
+    description: 'The sum of the inputs'
+
 runs:
   using: "composite"
   steps:
+    # https://github.com/mikefarah/yq
+    - sheel: Install yq
+      run: pip install yq
+  
     # https://hub.docker.com/r/macbre/index-digest
     - shell: bash 
       run: |
@@ -44,7 +53,6 @@ runs:
         # create an empty SQL log file (will be used when "index-digest-sql-log" is not provided)
         touch /tmp/index_digest_empty_log.sql
 
-
     - shell: bash
       run: |
         docker run --network=host --volume="${{ inputs.index-digest-sql-log }}:/tmp/log.sql:ro" \
@@ -53,3 +61,12 @@ runs:
           --sql-log=/tmp/log.sql \
           --format=yaml \
           ${{ inputs.index-digest-dsn }} | tee ${{ inputs.index-digest-report-file }}
+
+    # process the report file
+    # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
+    - shell: bash
+      run: |
+        number_of_reports=$(cat /tmp/index-digest-results.yml  | yq e '.reports[].message' - | wc -l)
+        echo "Number of reported issues: ${number_of_reports}"
+
+        echo "::set-output name=number_of_reports::${number_of_reports}"
