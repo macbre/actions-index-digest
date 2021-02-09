@@ -80,7 +80,7 @@ You will then have **all queries** (not only slow ones - see `--long-query-time`
 Then, having a slow query log, all you need to do is parse it with [`pt-query-digest`](https://www.percona.com/doc/percona-toolkit/LATEST/pt-query-digest.html) and get the list of unique SQL queries:
 
 ```
-pt-query-digest /tmp/log/slow_query.log --output json | jq .classes[].example.query | sed 's/\\n/ /g'| jq -r . > /tmp/log.sql
+pt-query-digest /tmp/log/slow_query.log --limit=1000 --output json | jq .classes[].example.query | sed 's/\\n/ /g'| jq -r . > /tmp/log.sql
 ```
 
 And then run the action:
