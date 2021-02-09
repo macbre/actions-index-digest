@@ -34,6 +34,8 @@ inputs:
 outputs:
   number-of-issues:
     description: 'Number of issues reported'
+  json-report:
+    description: 'One-line JSON with the report'
 
 runs:
   using: "composite"
@@ -66,7 +68,8 @@ runs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
     - shell: bash
       run: |
-        number_of_issues=$(cat /tmp/index-digest-results.yml  | yq e '.reports[].message' - | wc -l)
+        number_of_issues=$(cat ${{ inputs.index-digest-report-file }} | yq e '.reports[].message' - | wc -l)
         echo "Number of reported issues: ${number_of_issues}"
 
         echo "::set-output name=number-of-issues::${number_of_issues}"
+        echo "::set-output name=json-report::$(cat ${{ inputs.index-digest-report-file }} | yq e '.' - --tojson --indent 0)}"
