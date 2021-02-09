@@ -64,10 +64,7 @@ runs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
     - shell: bash
       run: |
-        sudo pip3 install yq; yq --version
-
-        number_of_issues=$(cat ${{ inputs.index-digest-report-file }} | yq '.reports[].message' -r | wc -l)
+        number_of_issues=$(egrep '^\- type:' -c ${{ inputs.index-digest-report-file }})
         echo "Number of reported issues: ${number_of_issues}"
 
         echo "::set-output name=number-of-issues::${number_of_issues}"
-        echo "::set-output name=json-report::$(cat ${{ inputs.index-digest-report-file }} | yq . -c)"
