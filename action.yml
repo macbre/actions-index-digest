@@ -64,9 +64,6 @@ runs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
     - shell: bash
       run: |
-        # https://github.com/mikefarah/yq
-        sudo snap install yq
-
         number_of_issues=$(cat ${{ inputs.index-digest-report-file }} | yq e '.reports[].message' - | wc -l)
         echo "Number of reported issues: ${number_of_issues}"
 
