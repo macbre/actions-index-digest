@@ -41,11 +41,11 @@ runs:
   using: "composite"
   steps:
     # https://github.com/mikefarah/yq
-    - sheel: bash
+    - shell: bash
       run: pip install yq
-  
+
     # https://hub.docker.com/r/macbre/index-digest
-    - shell: bash 
+    - shell: bash
       run: |
         echo "Using index-version ${{ inputs.index-digest-version }} ..."
         docker pull macbre/index-digest:${{ inputs.index-digest-version }}
