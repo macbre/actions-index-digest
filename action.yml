@@ -30,16 +30,18 @@ inputs:
     required: true
     default: "/tmp/index-digest.yml"
 
-# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs-for-composite-run-steps-actions
 outputs:
   number-of-issues:
     description: 'Number of issues reported'
+    value: ${{ steps.process-the-report-file.outputs.number-of-issues }}
 
 runs:
   using: "composite"
   steps:
     # https://hub.docker.com/r/macbre/index-digest
     - shell: bash
+      id: pull-and-set-up-index-digest-environment
       run: |
         echo "Using index-version ${{ inputs.index-digest-version }} ..."
         docker pull macbre/index-digest:${{ inputs.index-digest-version }}
@@ -50,6 +52,7 @@ runs:
         touch /tmp/index_digest_empty_log.sql
 
     - shell: bash
+      id: run-index-digest
       run: |
         docker run --network=host --volume="${{ inputs.index-digest-sql-log }}:/tmp/log.sql:ro" \
           -t macbre/index-digest:${{ inputs.index-digest-version }} \
@@ -61,6 +64,7 @@ runs:
     # process the report file
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
     - shell: bash
+      id: process-the-report-file
       run: |
         number_of_issues=$(egrep '^\- type:' -c ${{ inputs.index-digest-report-file }})
         echo "Number of reported issues: ${number_of_issues}"
