@@ -34,8 +34,6 @@ inputs:
 outputs:
   number-of-issues:
     description: 'Number of issues reported'
-  json-report:
-    description: 'One-line JSON with the report'
 
 runs:
   using: "composite"
