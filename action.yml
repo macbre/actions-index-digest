@@ -32,14 +32,14 @@ inputs:
 
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
 outputs:
-  sum: # id of the output
-    description: 'The sum of the inputs'
+  number-of-issues:
+    description: 'Number of issues reported'
 
 runs:
   using: "composite"
   steps:
     # https://github.com/mikefarah/yq
-    - sheel: Install yq
+    - sheel: bash
       run: pip install yq
   
     # https://hub.docker.com/r/macbre/index-digest
@@ -66,7 +66,7 @@ runs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
     - shell: bash
       run: |
-        number_of_reports=$(cat /tmp/index-digest-results.yml  | yq e '.reports[].message' - | wc -l)
-        echo "Number of reported issues: ${number_of_reports}"
+        number_of_issues=$(cat /tmp/index-digest-results.yml  | yq e '.reports[].message' - | wc -l)
+        echo "Number of reported issues: ${number_of_issues}"
 
-        echo "::set-output name=number_of_reports::${number_of_reports}"
+        echo "::set-output name=number-of-issues::${number_of_issues}"
