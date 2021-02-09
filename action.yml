@@ -64,7 +64,8 @@ runs:
     # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
     - shell: bash
       run: |
-        yq --version
+        pip3 install yq; yq --version
+
         number_of_issues=$(cat ${{ inputs.index-digest-report-file }} | yq '.reports[].message' -r | wc -l)
         echo "Number of reported issues: ${number_of_issues}"
 
