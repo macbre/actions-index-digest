@@ -30,22 +30,29 @@ inputs:
     required: true
     default: "/tmp/index-digest.yml"
 
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs-for-composite-run-steps-actions
+outputs:
+  number-of-issues:
+    description: 'Number of issues reported'
+    value: ${{ steps.process-the-report-file.outputs.number-of-issues }}
+
 runs:
   using: "composite"
   steps:
     # https://hub.docker.com/r/macbre/index-digest
-    - shell: bash 
+    - shell: bash
+      id: pull-and-set-up-index-digest-environment
       run: |
-        echo "Using index-version ${{ inputs.index-digest-version }} ..."
-        docker pull macbre/index-digest:${{ inputs.index-digest-version }}
+        echo "Pulling index-version ${{ inputs.index-digest-version }} ..."
+        docker pull --quiet macbre/index-digest:${{ inputs.index-digest-version }}
 
         echo "Using SQL log file: ${{ inputs.index-digest-sql-log }} ..."
 
         # create an empty SQL log file (will be used when "index-digest-sql-log" is not provided)
         touch /tmp/index_digest_empty_log.sql
 
-
     - shell: bash
+      id: run-index-digest
       run: |
         docker run --network=host --volume="${{ inputs.index-digest-sql-log }}:/tmp/log.sql:ro" \
           -t macbre/index-digest:${{ inputs.index-digest-version }} \
@@ -53,3 +60,13 @@ runs:
           --sql-log=/tmp/log.sql \
           --format=yaml \
           ${{ inputs.index-digest-dsn }} | tee ${{ inputs.index-digest-report-file }}
+
+    # process the report file
+    # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs
+    - shell: bash
+      id: process-the-report-file
+      run: |
+        number_of_issues=$(egrep '^\- type:' -c ${{ inputs.index-digest-report-file }})
+        echo "Number of reported issues: ${number_of_issues}"
+
+        echo "::set-output name=number-of-issues::${number_of_issues}"
