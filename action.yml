@@ -43,8 +43,8 @@ runs:
     - shell: bash
       id: pull-and-set-up-index-digest-environment
       run: |
-        echo "Using index-version ${{ inputs.index-digest-version }} ..."
-        docker pull macbre/index-digest:${{ inputs.index-digest-version }}
+        echo "Pulling index-version ${{ inputs.index-digest-version }} ..."
+        docker pull --quiet macbre/index-digest:${{ inputs.index-digest-version }}
 
         echo "Using SQL log file: ${{ inputs.index-digest-sql-log }} ..."
 
