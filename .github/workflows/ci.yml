@@ -15,6 +15,8 @@ jobs:
         - "1.4.0"
         - "1.5.0"
         - "latest"
+    env: 
+      MYSQL_DSN: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
 
     services:
       # https://hub.docker.com/_/mysql
@@ -29,7 +31,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
+      - name: Run an action on the empty database
+        uses: ./
+        with:
+          index-digest-version: ${{ matrix.index-digest-version }}
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
+
       - name: Import test schema into the database
         run: |
           mysql --host=127.0.0.1 --port=3310 --user=root --database=index_digest < ./sql/0000_setup.sql
@@ -46,7 +54,7 @@ jobs:
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
-          index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
           index-digest-report-file: "./report.yml"
 
       - name: Run an action (with --sql-log)
@@ -54,7 +62,7 @@ jobs:
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
-          index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
           index-digest-sql-log: "/tmp/log.sql"  # use an absolute path here!
           index-digest-report-file: "./report.yml"
 
