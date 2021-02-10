@@ -44,7 +44,11 @@ Later on you in your GitHub Actions workflow can get and assert on number of iss
 
 And you'll get something similar to:
 
-![Assertion](https://user-images.githubusercontent.com/1929317/107404753-e2901000-6b06-11eb-83e0-378044eb7c64.png)
+![Assertion](https://raw.githubusercontent.com/macbre/actions-index-digest/main/graphics/index-digest-failed.png)
+
+And GitHub Actions will log these warnings and errors:
+
+![Assertion](https://raw.githubusercontent.com/macbre/actions-index-digest/main/graphics/aff22da.png)
 
 ## An example result file
 
