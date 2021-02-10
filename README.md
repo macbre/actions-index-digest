@@ -15,9 +15,9 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 ```yaml
     - name: Install and run index-digest
       id: run-index-digest
-      uses: macbre/actions-index-digest@0.5.0
+      uses: macbre/actions-index-digest@0.7.0
       with:
-        index-digest-version: "1.4.0"
+        index-digest-version: "1.5.0"  # or "latest" if you wish use the master version
         index-digest-dsn: "mysql://test_user:test_password@127.0.0.1:3306/test_db"
         index-digest-report-file: "./report.yml"
 ```
@@ -115,9 +115,9 @@ And then run the action:
 
 ```yaml
     - name: Install and run index-digest
-      uses: macbre/actions-index-digest@0.5.0
+      uses: macbre/actions-index-digest@0.7.0
       with:
-        index-digest-version: "1.4.0"
+        index-digest-version: "1.5.0"
         index-digest-dsn: "mysql://test_user:test_password@127.0.0.1:3306/test_db"
         index-digest-sql-log: "/tmp/log.sql"  # use an absolute path here!
         index-digest-report-file: "./report.yml"
