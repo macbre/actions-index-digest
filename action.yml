@@ -66,7 +66,7 @@ runs:
     - shell: bash
       id: process-the-report-file
       run: |
-        number_of_issues=$(egrep '^\- type:' -c ${{ inputs.index-digest-report-file }})
+        number_of_issues=$(egrep '^\- type:' ${{ inputs.index-digest-report-file }} | wc -l)
         echo "Number of reported issues: ${number_of_issues}"
 
         echo "::set-output name=number-of-issues::${number_of_issues}"
