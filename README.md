@@ -28,7 +28,7 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 
 ### Asserting using number of issues reported
 
-Later on you in your GitHub Actions workflow can get and assert on number of issues reported by `index-digest`:
+Later on you in your GitHub Actions workflow can get and **assert on number of issues reported by `index-digest` and brake the CI pipeline**:
 
 ```yaml
     - name: Verify index-digest results
@@ -38,6 +38,9 @@ Later on you in your GitHub Actions workflow can get and assert on number of iss
         echo "::group::index-digest report"
         cat ./report.yml
         echo "::endgroup::"
+
+        echo "::error::index-digest database performance check failed"
+        exit 1
 ```
 
 > Please note **`run-index-digest`** step name here. It needs to match the `id` of the previous step.
