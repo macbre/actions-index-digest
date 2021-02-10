@@ -9,12 +9,14 @@ jobs:
   ci:
     runs-on: "ubuntu-20.04"  # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         index-digest-version:
         - "1.4.0"
         - "1.5.0"
         - "latest"
+    env: 
+      MYSQL_DSN: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
 
     services:
       # https://hub.docker.com/_/mysql
@@ -29,11 +31,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Import test schema into the database
+
+      - name: Set up database test user
         run: |
           mysql --host=127.0.0.1 --port=3310 --user=root --database=index_digest < ./sql/0000_setup.sql
 
+      #
+      # Run an action on the empty database
+      #
+      - name: Run an action on the empty database
+        id: action-run-empty-database
+        uses: ./
+        with:
+          index-digest-version: ${{ matrix.index-digest-version }}
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
+
+      - if: steps.action-run-empty-database.outputs.number-of-issues != 0
+        run: exit 1
+
+
+      #
+      # Database import
+      #
+      - name: Import test schema into the database
+        run: |
           echo -e "[client]\nuser=digest\npassword=s3cr3t\n" > ~/.my.cnf
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0001_redundant_indices.sql
           mysql --host=127.0.0.1 --port=3310 --user=digest --database=index_digest < ./sql/0002_queries_not_using_indices.sql
@@ -41,29 +62,42 @@ jobs:
 
           cp ./sql/log.sql /tmp/log.sql
 
+
+      #
+      # Action run on a mocked database
+      #
       - name: Run an action
         id: action-run
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
-          index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
           index-digest-report-file: "./report.yml"
 
+      - if: steps.action-run.outputs.number-of-issues != 1
+        run: exit 1
+
+      #
+      # Action run on a mocked database (with SQL query provided)
+      #
       - name: Run an action (with --sql-log)
         id: action-run-with-sql-log
         uses: ./
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
-          index-digest-dsn: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
           index-digest-sql-log: "/tmp/log.sql"  # use an absolute path here!
           index-digest-report-file: "./report.yml"
+
+      - if: steps.action-run-with-sql-log.outputs.number-of-issues != 7
+        run: exit 1
+
 
       - name: Check the version and the output file
         run: |
           docker run -t macbre/index-digest:${{ matrix.index-digest-version }} --version
           cat ./report.yml
-          
-          echo "Steps context: ${{ toJSON(steps) }}"
 
-          echo "Reports from an action run: ${{ steps.action-run.outputs.number-of-issues }}"
-          echo "Reports from an action run (with --sql-log): ${{ steps.action-run-with-sql-log.outputs.number-of-issues }}"
+          echo "Steps context: ${{ toJSON(steps) }}"
+          env | sort
+          docker images
