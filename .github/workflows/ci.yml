@@ -46,7 +46,7 @@ jobs:
           index-digest-version: ${{ matrix.index-digest-version }}
           index-digest-dsn: ${{ env.MYSQL_DSN }}
 
-      - if: steps.action-run-empty-database.outputs.number-of-issues <> 0
+      - if: steps.action-run-empty-database.outputs.number-of-issues != 0
         run: exit 1
 
 
@@ -74,7 +74,7 @@ jobs:
           index-digest-dsn: ${{ env.MYSQL_DSN }}
           index-digest-report-file: "./report.yml"
 
-      - if: steps.action-run.outputs.number-of-issues <> 1
+      - if: steps.action-run.outputs.number-of-issues != 1
         run: exit 1
 
       #
@@ -89,7 +89,7 @@ jobs:
           index-digest-sql-log: "/tmp/log.sql"  # use an absolute path here!
           index-digest-report-file: "./report.yml"
 
-      - if: steps.action-run-with-sql-log.outputs.number-of-issues <> 7
+      - if: steps.action-run-with-sql-log.outputs.number-of-issues != 7
         run: exit 1
 
 
