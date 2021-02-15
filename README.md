@@ -6,6 +6,8 @@ GitHub Action for running [`index-digest`](https://github.com/macbre/index-diges
 
 With this Action you can easily **implement database performance regression testing in your continuos integration pipeline**.
 
+Take a look at [what does `index-digest` check](https://github.com/macbre/index-digest#checks).
+
 ## How to use it
 
 We assume that you have a MySQL up and running in your CI pipeline. Your tests suite runs using this database and SQL queries log is collected.
