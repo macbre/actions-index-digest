@@ -28,6 +28,9 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 
 `index-digest` image will be fetched and run with the provided options. The YAML report file will be stored in the location specified by `index-digest-report-file`. You can use it for additional assertions and to raise an error in your CI pipeline if there's something wrong.
 
+> **Read more on medium.com** - [Using Continuous Integration pipeline to guard against database performance regressions
+](https://medium.com/bethink-pl/using-continuous-integration-pipeline-to-guard-against-database-performance-regressions-d50f3c79278a)
+
 ### Asserting using number of issues reported
 
 Later on you in your GitHub Actions workflow can get and **assert on number of issues reported by `index-digest` and brake the CI pipeline**:
