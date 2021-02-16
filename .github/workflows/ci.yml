@@ -114,7 +114,7 @@ jobs:
       #
       # Action run on a mocked database (with SQL query provided) + fail when issues are reported
       #
-      - name: Run an action (with --sql-log)
+      - name: Run an action (with --sql-log) + fail-on-issues
         id: action-run-with-sql-log-fail-on-issues
         continue-on-error: true
         uses: ./
