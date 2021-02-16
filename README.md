@@ -31,24 +31,16 @@ Given your MySQL test instance (and the optional SQL queries log) you can simply
 > **Read more on medium.com** - [Using Continuous Integration pipeline to guard against database performance regressions
 ](https://medium.com/bethink-pl/using-continuous-integration-pipeline-to-guard-against-database-performance-regressions-d50f3c79278a)
 
-### Asserting using number of issues reported
+### Asserting on issues reported
 
-Later on you in your GitHub Actions workflow can get and **assert on number of issues reported by `index-digest` and brake the CI pipeline**:
+You can make the action fail if there are issues reported by index-digest. Simply add `fail-on-issues: true` option to `with` context when calling the action.
 
 ```yaml
-    - name: Verify index-digest results
-      if: steps.run-index-digest.outputs.number-of-issues >= 0
-      run: |
-        echo "::warning::index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
-        echo "::group::index-digest report"
-        cat ./report.yml
-        echo "::endgroup::"
-
-        echo "::error::index-digest database performance check failed"
-        exit 1
+      with:
+        # ...
+        fail-on-issues: true
 ```
 
-> Please note **`run-index-digest`** step name here. It needs to match the `id` of the previous step.
 
 And you'll get something similar to:
 

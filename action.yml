@@ -30,6 +30,11 @@ inputs:
     required: true
     default: "/tmp/index-digest.yml"
 
+  fail-on-issues:
+    description: "Should the action fail when any issue is reported"
+    required: false
+    default: false
+
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#outputs-for-composite-run-steps-actions
 outputs:
   number-of-issues:
@@ -71,3 +76,18 @@ runs:
         echo "got ${number_of_issues} issue(s)"
 
         echo "::set-output name=number-of-issues::${number_of_issues}"
+
+    # fail on issues (see #9)
+    - shell: bash
+      name: Verify index-digest results and fail on issues
+      run: |
+        if [ "${{ inputs.fail-on-issues }}" = "true" ] && [ "${{ steps.process-the-report-file.outputs.number-of-issues }}" -gt 0 ]
+        then
+          echo "::warning::index-digest issues reported: ${{ steps.process-the-report-file.outputs.number-of-issues }}"
+          echo "::group::index-digest report"
+          cat ${{ inputs.index-digest-report-file }}
+          echo "::endgroup::"
+
+          echo "::error::index-digest database performance check failed"
+          exit 1
+        fi
