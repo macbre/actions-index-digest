@@ -77,15 +77,14 @@ runs:
 
         echo "::set-output name=number-of-issues::${number_of_issues}"
 
-    - shell: bash
-    
     # fail on issues
-    - name: Verify index-digest results and fail on issues
+    - shell: bash
+      name: Verify index-digest results and fail on issues
       if: inputs.fail-on-issues == true && steps.process-the-report-file.outputs.number-of-issues > 0
       run: |
         echo "::warning::index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
         echo "::group::index-digest report"
-        cat ./report.yml
+        cat ${{ inputs.index-digest-report-file }}
         echo "::endgroup::"
 
         echo "::error::index-digest database performance check failed"
