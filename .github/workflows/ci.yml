@@ -17,6 +17,7 @@ jobs:
         - "latest"
     env: 
       MYSQL_DSN: "mysql://digest:s3cr3t@127.0.0.1:3310/index_digest"
+      WRONG_MYSQL_DSN: "mysql://digest:INCORRECT_PASS@127.0.0.1:3310/index_digest"
 
     services:
       # https://hub.docker.com/_/mysql
@@ -47,6 +48,21 @@ jobs:
           index-digest-dsn: ${{ env.MYSQL_DSN }}
 
       - if: steps.action-run-empty-database.outputs.number-of-issues != 0
+        run: exit 1
+
+      #
+      # Run an action with an incorrect DSN
+      #
+      - name: Run an action on the empty database
+        id: action-run-wrong-dsn
+        continue-on-error: true
+        uses: ./
+        with:
+          index-digest-version: ${{ matrix.index-digest-version }}
+          index-digest-dsn: ${{ env.WRONG_MYSQL_DSN }}
+
+      # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#steps-context
+      - if: steps.action-run-wrong-dsn.outcome != failure
         run: exit 1
 
 
