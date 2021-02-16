@@ -53,7 +53,7 @@ jobs:
       #
       # Run an action with an incorrect DSN
       #
-      - name: Run an action on the empty database
+      - name: Run an action with an incorrect DSN
         id: action-run-wrong-dsn
         continue-on-error: true
         uses: ./
@@ -61,13 +61,10 @@ jobs:
           index-digest-version: ${{ matrix.index-digest-version }}
           index-digest-dsn: ${{ env.WRONG_MYSQL_DSN }}
 
-      - run: |
-          echo "Step context: ${{ toJSON(steps.action-run-wrong-dsn) }}"
 
       # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#steps-context
-#       - if: steps.action-run-wrong-dsn.outcome != "failure"
-#         run: exit 1
-
+      - if: steps.action-run-wrong-dsn.outcome != 'failure'
+        run: exit 1
 
       #
       # Database import
