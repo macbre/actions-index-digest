@@ -81,13 +81,13 @@ runs:
     - shell: bash
       name: Verify index-digest results and fail on issues
       run: |
-        echo "${{ inputs.fail-on-issues }}"
-        echo "${{ steps.process-the-report-file.outputs.number-of-issues }}"
-      
-        echo "::warning::index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
-        echo "::group::index-digest report"
-        cat ${{ inputs.index-digest-report-file }}
-        echo "::endgroup::"
+        if [ "${{ inputs.fail-on-issues }}" = "true" ] && [ "${{ steps.process-the-report-file.outputs.number-of-issues }}" <> "0" ]
+        then
+          echo "::warning::index-digest issues reported: ${{ steps.run-index-digest.outputs.number-of-issues }}"
+          echo "::group::index-digest report"
+          cat ${{ inputs.index-digest-report-file }}
+          echo "::endgroup::"
 
-        echo "::error::index-digest database performance check failed"
-        # exit 1
+          echo "::error::index-digest database performance check failed"
+          exit 1
+        fi
