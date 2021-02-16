@@ -46,6 +46,8 @@ jobs:
         with:
           index-digest-version: ${{ matrix.index-digest-version }}
           index-digest-dsn: ${{ env.MYSQL_DSN }}
+          # this action should not fail as there are no issues to be reported
+          fail-on-issues: true
 
       - if: steps.action-run-empty-database.outputs.number-of-issues != 0
         run: exit 1
@@ -106,6 +108,25 @@ jobs:
           index-digest-report-file: "./report.yml"
 
       - if: steps.action-run-with-sql-log.outputs.number-of-issues != 7
+        run: exit 1
+
+
+      #
+      # Action run on a mocked database (with SQL query provided) + fail when issues are reported
+      #
+      - name: Run an action (with --sql-log)
+        id: action-run-with-sql-log-fail-on-issues
+        continue-on-error: true
+        uses: ./
+        with:
+          index-digest-version: ${{ matrix.index-digest-version }}
+          index-digest-dsn: ${{ env.MYSQL_DSN }}
+          index-digest-sql-log: "/tmp/log.sql"  # use an absolute path here!
+          index-digest-report-file: "./report.yml"
+          fail-on-issues: true
+
+      # the action above should fail because of "fail-on-issues" (see #9)
+      - if: steps.action-run-wrong-dsn.outcome != 'failure'
         run: exit 1
 
 
