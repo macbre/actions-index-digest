@@ -22,7 +22,7 @@ jobs:
     services:
       # https://hub.docker.com/_/mysql
       database:
-        image: "mysql:8.0.22"
+        image: "mysql:8.0.23"
         env:
             MYSQL_ALLOW_EMPTY_PASSWORD: yes
             MYSQL_DATABASE: index_digest
