@@ -50,6 +50,7 @@ runs:
       run: |
         echo "Pulling index-version ${{ inputs.index-digest-version }} ..."
         docker pull --quiet macbre/index-digest:${{ inputs.index-digest-version }}
+        echo "Pulled $( docker run macbre/index-digest:${{ inputs.index-digest-version }} --version )"
 
         echo "Using SQL log file: ${{ inputs.index-digest-sql-log }} ..."
 
