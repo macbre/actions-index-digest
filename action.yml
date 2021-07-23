@@ -9,7 +9,7 @@ inputs:
   index-digest-version:
     description: "The version of index-digest to install"
     required: true
-    default: "1.4.0"
+    default: "1.5.0"
     
   index-digest-dsn:
     description: "DSN pointing at the database to check"
@@ -44,13 +44,13 @@ outputs:
 runs:
   using: "composite"
   steps:
-    # https://hub.docker.com/r/macbre/index-digest
+    # https://github.com/macbre/index-digest/pkgs/container/index-digest
     - shell: bash
       id: pull-and-set-up-index-digest-environment
       run: |
-        echo "Pulling index-version ${{ inputs.index-digest-version }} ..."
-        docker pull --quiet macbre/index-digest:${{ inputs.index-digest-version }}
-        echo "Pulled $( docker run macbre/index-digest:${{ inputs.index-digest-version }} --version )"
+        echo "Pulling index-version ${{ inputs.index-digest-version }} from ghcr.io repository ..."
+        docker pull --quiet ghcr.io/macbre/index-digest:${{ inputs.index-digest-version }}
+        echo "Pulled $( docker run ghcr.io/macbre/index-digest:${{ inputs.index-digest-version }} --version )"
 
         echo "Using SQL log file: ${{ inputs.index-digest-sql-log }} ..."
 
@@ -60,8 +60,10 @@ runs:
     - shell: bash
       id: run-index-digest
       run: |
+        set -euxo pipefail
+
         docker run --network=host --volume="${{ inputs.index-digest-sql-log }}:/tmp/log.sql:ro" \
-          -t macbre/index-digest:${{ inputs.index-digest-version }} \
+          -t ghcr.io/macbre/index-digest:${{ inputs.index-digest-version }} \
           --checks=${{ inputs.index-digest-checks }} \
           --sql-log=/tmp/log.sql \
           --format=yaml \
