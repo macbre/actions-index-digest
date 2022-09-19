@@ -9,7 +9,7 @@ inputs:
   index-digest-version:
     description: "The version of index-digest to install"
     required: true
-    default: "1.5.0"
+    default: "1.5.1"
     
   index-digest-dsn:
     description: "DSN pointing at the database to check"
